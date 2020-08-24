@@ -20,7 +20,8 @@ def create_project_hash
       :percent_funded => project.css("li.first.funded strong").text.gsub("%", "").to_i
     }
   end
-  end
+  projects
+end
 
   #each item will be housed under a li: li.project.grid_4
   #inside it, you have the children
