@@ -77,6 +77,6 @@ end
   #down below it clearly says in the span Brooklyn ny. just do
   #project.css("ul.project-meta span.location_name").text
 
-end
+
 
 # create_project_hash
