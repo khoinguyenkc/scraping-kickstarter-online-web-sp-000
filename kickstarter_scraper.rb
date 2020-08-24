@@ -6,8 +6,22 @@ require 'json'
 def create_project_hash
   # write your code here
   html = File.read('fixtures/kickstarter.html')
+  #it's different syntaxes because this is a local file not using open uri
   kickstarter = Nokogiri::HTML(html) #retunrs xml nodeset
-  binding.pry
+  hugexmlnodeset = kickstarter.css("li.project.grid_4")
+  projects = {}
+
+  hugexmlnodeset.each do | project |
+    title = project.css("h2.bbcard_name strong a").text
+    projects[title.to_sym] = {
+      :image_link => project.css("div.project-thumbnail a img").attribute("src").value,
+      :description => project.css("p.bbcard_blurb").text,
+      :location => project.css("ul.project-meta span.location_name").text,
+      :percent_funded => project.css("li.first.funded strong").text.gsub("%", "").to_i
+    }
+  end
+  end
+
   #each item will be housed under a li: li.project.grid_4
   #inside it, you have the children
   #it actually only has one child, which is div class project-card-wrap
@@ -23,6 +37,7 @@ def create_project_hash
   #we found it relatieply painessly by doing further searches
   #as opposed to digging the hiearchy of the nodset sml ourselves
   #project.css("div.project-thumbnail a img").attribute("src").value
+
   #the first part is an xml nodeset. so we call the attributep roperty on it then the key value inside
   #if i do class it says attribute("src") is a nokigiri xml attr file.
   #it looks likje this :
@@ -33,7 +48,7 @@ def create_project_hash
   #project.css("h2.bbcard_name span").text returns "\nby\nW4 New Music\n"
   #project.css("p.bbcard_blurb").text retunrs "\nFour young composers join forces with an indie orchestra to present this musical reflection on a literary masterpiece.\n"
   #project.css("li.pledged strong span").text returns "$2,772"
-  #project.css("li.first.funded strong").text returns "77%"
+  #project.css("li.first.funded strong").text.gsub("%", "").to_i returns "77%"
   #.gsub("%", "").to_i to remove the percent sign and convert it into an integer.
 
 
@@ -57,8 +72,10 @@ def create_project_hash
   # longthing = project.css("ul.project-meta a").attribute("data-location").value
   #my_hash = JSON.parse(longthing)
   #my_hash["short_name"] returns "Brooklyn, NY"
-
+  #never mind, i'm so stupid
+  #down below it clearly says in the span Brooklyn ny. just do
+  #project.css("ul.project-meta span.location_name").text
 
 end
 
-create_project_hash
+# create_project_hash
